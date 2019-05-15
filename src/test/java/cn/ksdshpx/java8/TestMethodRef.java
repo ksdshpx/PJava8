@@ -55,7 +55,7 @@ public class TestMethodRef {
         System.out.println(sup2.get());
     }
 
-    //类::实例方法名
+    //类::静态方法名
     @Test
     public void test3(){
         Comparator<Integer> com = (x,y) -> Integer.compare(x,y);
