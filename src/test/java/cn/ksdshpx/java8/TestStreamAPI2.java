@@ -18,6 +18,8 @@ public class TestStreamAPI2 {
             new Employee("liSi", 45, 7943.99),
             new Employee("wangWu", 18, 2333.90),
             new Employee("zhaoLiu", 88, 1900.88),
+            new Employee("tianQi", 38, 3440.85),
+            new Employee("tianQi", 38, 3440.85),
             new Employee("tianQi", 38, 3440.85)
     );
 
@@ -36,6 +38,15 @@ public class TestStreamAPI2 {
         emps.stream()
                 .filter((e) -> e.getSalary() > 2000)
                 .limit(2)
+                .forEach(System.out::println);
+    }
+
+    @Test
+    public void test3(){
+        emps.stream()
+                .filter((e -> e.getSalary() > 2000))
+                .skip(2)
+                .distinct()
                 .forEach(System.out::println);
     }
 }
