@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 /**
-
  * Create with IntelliJ IDEA
  * Create by peng.xing
  * Date: 2019/5/24
