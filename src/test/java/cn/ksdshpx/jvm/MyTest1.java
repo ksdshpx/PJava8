@@ -17,6 +17,8 @@ package cn.ksdshpx.jvm;
  *      ⑤初始化一个类的子类
  *      ⑥Java虚拟机启动时被标识为启动类的类
  *      ⑦JDK1.7提供的动态语言支持
+ *
+ *      -XX:+TraceClassLoading,用于追踪类的加载信息并打印
  */
 public class MyTest1 {
     public static void main(String[] args) {
