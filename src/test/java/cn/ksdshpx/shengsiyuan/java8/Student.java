@@ -43,6 +43,14 @@ public class Student {
         return student1.getName().compareToIgnoreCase(student2.getName());
     }
 
+    public int compareByScore(Student student) {
+        return this.getScore() - student.getScore();
+    }
+
+    public int compareByName(Student student) {
+        return this.getName().compareToIgnoreCase(student.getName());
+    }
+
     @Override
     public String toString() {
         return "Student{" +
