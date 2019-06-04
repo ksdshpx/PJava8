@@ -16,9 +16,13 @@ public class MyTest5 {
 }
 
 interface MyParent5{
-    public static final int a = 5;
+    public static Thread thread = new Thread(){
+        {
+            System.out.println("MyParent5 invoked!");
+        }
+    };
 }
 
-interface MyChild5 extends MyParent5{
-    public static final int b = 6;
+class MyChild5 implements MyParent5{
+    public static int b = 6;
 }
