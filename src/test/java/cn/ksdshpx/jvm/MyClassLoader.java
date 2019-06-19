@@ -11,6 +11,7 @@ import java.io.*;
  */
 public class MyClassLoader extends ClassLoader {
     private String classLoaderName;
+    private String path;
 
     public MyClassLoader(String classLoaderName) {
         super();//使用系统类加载器作为自定义类加载器的父类
@@ -22,9 +23,13 @@ public class MyClassLoader extends ClassLoader {
         this.classLoaderName = classLoaderName;
     }
 
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        System.out.println("Use myClassLoader!!");
+        System.out.println("findClass Invoked:" + name);
         byte[] data = loadClassData(name);
         return this.defineClass(name, data, 0, data.length);
     }
@@ -34,7 +39,7 @@ public class MyClassLoader extends ClassLoader {
         OutputStream baos = null;
         byte[] bytes = null;
         try {
-            in = new FileInputStream("d:\\"+name.replace(".","\\") + ".class");
+            in = new FileInputStream((path == null) ? "" : path + name.replace(".", "\\") + ".class");
             baos = new ByteArrayOutputStream();
             bytes = new byte[in.available()];
             int len = 0;
