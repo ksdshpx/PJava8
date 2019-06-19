@@ -7,12 +7,14 @@ import java.lang.reflect.Method;
  * Create by peng.xing
  * Date: 2019/6/19
  * Time: 10:51
- * Description:
+ * Description:类的命名空间深度解析
  */
 public class MyTest10 {
     public static void main(String[] args) throws Exception {
         MyClassLoader myClassLoader1 = new MyClassLoader("loader1");
         MyClassLoader myClassLoader2 = new MyClassLoader("loader2");
+        myClassLoader1.setPath("d:\\");
+        myClassLoader2.setPath("d:\\");
         Class<?> clazz1 = myClassLoader1.loadClass("cn.ksdshpx.jvm.Person");
         Class<?> clazz2 = myClassLoader2.loadClass("cn.ksdshpx.jvm.Person");
         System.out.println(clazz1 == clazz2);
