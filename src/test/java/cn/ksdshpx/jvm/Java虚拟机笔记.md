@@ -116,6 +116,7 @@
 
     > - 对于静态字段来说，只有直接定义了该字段的类才会被初始化
     > - 当一个类在进行初始化时，要求其所有父类都已经初始化完毕了
+    > - -XX:+TraceClassLoading，用于追踪类的加载信息并打印出来
 
   - 所有的Java虚拟机实现必须在每个类或接口被Java程序**首次主动使用**时才初始化他们
 
@@ -128,5 +129,77 @@
     - 从zip,jar等归档文件中加载.class文件
     - 从专有数据库中提取.class文件
     - 将Java源文件动态编译为.class文件
+  
+- **常量的本质含义与反编译及助记符详解**
+
+    - 常量在编译阶段会存入调用这个常量的方法所在的类的常量池中
+
+    - 本质上，调用类并没有直接引用到定义常量的类，因此并不会触发定义常量的类的初始化
+
+      ```java
+      public class MyTest2 {
+          public static void main(String[] args) {
+              System.out.println(MyParent2.str);
+              System.out.println(MyParent2.s);
+              System.out.println(MyParent2.i);
+              System.out.println(MyParent2.m);
+          }
+      }
+      
+      class MyParent2 {
+          public static final String str = "hello";
+          public static final short s = 7;
+          public static final int i = 128;
+          public static final int m = 1;
+          static {
+              System.out.println("MyParent2 static block!");
+          }
+      }
+      ```
+
+      > 以上代码的运行结果：
+      >
+      > hello
+      > 7
+      > 128
+      > 1
+
+      反编译以上代码：**javap -c MyTest2.class**
+
+      ```java
+      Compiled from "MyTest2.java"
+      public class cn.ksdshpx.jvm.MyTest2 {
+        public cn.ksdshpx.jvm.MyTest2();
+          Code:
+             0: aload_0
+             1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+             4: return
+      
+        public static void main(java.lang.String[]);
+          Code:
+             0: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+             3: ldc           #4                  // String hello
+             5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+             8: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+            11: bipush        7
+            13: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V
+            16: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+            19: sipush        128
+            22: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V
+            25: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+            28: iconst_1
+            29: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V
+            32: return
+      }
+      ```
+
+      > 助记符
+      >
+      > 1. **ldc**:将int,float或者是String类型的常量值从常量池中推送至栈顶
+      > 2. **bipush**:将单字节（-128~127）的常量推送至栈顶
+      > 3. **sipush**:将短整型（-32768~32767）的常量推送至栈顶
+      > 4. **iconst_1~ iconst_5**:将int类型的1~5推送至栈顶
+
+    
 
 
