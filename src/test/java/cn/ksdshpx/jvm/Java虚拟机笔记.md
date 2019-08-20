@@ -200,6 +200,102 @@
       > 3. **sipush**:将短整型（-32768~32767）的常量推送至栈顶
       > 4. **iconst_1~ iconst_5**:将int类型的1~5推送至栈顶
 
-    
+- 编译期常量与运行期常量的区别及数组创建本质分析
+  
+  - 当一个常量的值并非编译期间可以确定的，那么其值就不会放到调用类的常量池中，这时在程序运行时，会导致主动使用这个常量所在的类，显然会导致这个类被初始化
+  
+  ```java
+  public class MyTest3 {
+      public static void main(String[] args) {
+          System.out.println(MyParent3.str);
+      }
+  }
+  
+  class MyParent3{
+      public static final String str = UUID.randomUUID().toString();
+  
+      static {
+          System.out.println("MyParent3 static block!");
+      }
+  }
+  ```
+  
+  > 以上代码的运行结果如下：
+  >
+  > MyParent3 static block!
+  > 13af1477-a635-43d9-9fa4-105153d3dcef
+  
+- 对于数组实例来说，其类型是由JVM在运行期动态生成的，表示为[Lcn.ksdshpx.jvm.MyParent4这种形式，其父类型为java.lang.Object
+  
+  ```java
+  public class MyTest4 {
+      public static void main(String[] args) {
+          //MyParent4 myParent4 = new MyParent4();
+          MyParent4[] myParent4s = new MyParent4[1];
+          System.out.println(myParent4s.getClass());
+          int[] ints = new int[1];
+          System.out.println(ints.getClass());//[I
+          System.out.println(ints.getClass().getSuperclass());//java.lang.Object
+      }
+  }
+  
+  class MyParent4{
+      static {
+          System.out.println("MyParent4 static block!");
+      }
+  }
+  ```
+  
+  >以上代码的运行结果如下：
+  >
+  >class [Lcn.ksdshpx.jvm.MyParent4;
+  >class [I
+  >class java.lang.Object
+  
+    反编译以上代码：**javap -c MyTest4.class**
+  
+  ```java
+  Compiled from "MyTest4.java"
+  public class cn.ksdshpx.jvm.MyTest4 {
+    public cn.ksdshpx.jvm.MyTest4();
+      Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+  
+    public static void main(java.lang.String[]);
+      Code:
+         0: iconst_1
+         1: anewarray     #2                  // class cn/ksdshpx/jvm/MyParent4
+         4: astore_1
+         5: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         8: aload_1
+         9: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        12: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;
+  )V
+        15: iconst_1
+        16: newarray       int
+        18: astore_2
+        19: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        22: aload_2
+        23: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        26: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;
+  )V
+        29: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        32: aload_2
+        33: invokevirtual #4                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+        36: invokevirtual #6                  // Method java/lang/Class.getSuperclass:()Ljava/lang/Clas
+  s;
+        39: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/Object;
+  )V
+        42: return
+  }
+  
+  ```
+  
+  > 助记符
+  >
+  > 1. **anewarray**:表示创建一个引用类型（类、接口、数组）的数组，并将其引用值压入栈顶
+  > 2. **newarray**:表示创建一个指定原始类型（int、float等）的数组，并将其引用值压入栈顶
 
 
