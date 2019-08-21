@@ -297,5 +297,84 @@
   >
   > 1. **anewarray**:表示创建一个引用类型（类、接口、数组）的数组，并将其引用值压入栈顶
   > 2. **newarray**:表示创建一个指定原始类型（int、float等）的数组，并将其引用值压入栈顶
+  
+- **接口初始化规则与类加载准备阶段和初始化阶段的重要意义分析**
+
+    - 当一个接口在初始化时，并不要求其父接口都完成了初始化
+    - 只有在真正使用父接口的时候（如引用接口中所使用的常量），才会初始化
+
+    ```java
+    public class MyTest5 {
+        public static void main(String[] args) {
+            System.out.println(MyChild5.b);
+        }
+    }
+    
+    interface MyParent5{
+        public static int a = 5;
+    }
+    
+    interface MyChild5 extends MyParent5{
+        public static int b = 6;
+    }
+    ```
+
+    > 删除MyParent5.class以及MyChild5.class,以上代码运行正常
+
+    若程序改为如下
+
+    ```java
+    public class MyTest5 {
+        public static void main(String[] args) {
+            System.out.println(MyChild5.b);
+        }
+    }
+    
+    interface MyParent5{
+        public static int a = 5;
+    }
+    
+    interface MyChild5 extends MyParent5{
+        public static int b = new Random().nextInt(2);
+    }
+    ```
+
+    > 以上代码删除MyChild5.class会报错
+
+    ```java
+    public class MyTest6 {
+        public static void main(String[] args) {
+            Singleton instance = Singleton.getInstance();
+            System.out.println("count1:"+Singleton.count1);
+            System.out.println("count2:"+Singleton.count2);
+        }
+    }
+    
+    class Singleton {
+        public static int count1;
+    
+        private static Singleton instance = new Singleton();
+    
+        private Singleton() {
+            count1++;
+            count2++;
+            System.out.println(count1);
+            System.out.println(count2);
+        }
+    
+        public static int count2 = 0;
+    
+        public static Singleton getInstance() {
+            return instance;
+        }
+    }
+    ```
+
+    > 以上代码的运行结果如下：
+    >
+    > 1
+    > 1
+    > count1:1
+    > count2:0
 
 
