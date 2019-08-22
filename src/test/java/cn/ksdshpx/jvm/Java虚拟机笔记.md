@@ -376,5 +376,86 @@
     > 1
     > count1:1
     > count2:0
+    
+- **类加载器深入解析与重要特性分析**
 
+    - 类加载原理图
 
+      ![1566393725012](C:\Users\south\AppData\Roaming\Typora\typora-user-images\1566393725012.png)
+
+![1566394386095](C:\Users\south\AppData\Roaming\Typora\typora-user-images\1566394386095.png)
+
+- 类的加载
+
+  - 类的加载的最终产品是位于内存中的Class对象
+
+  - Class对象封装了类在方法区内的数据结构，并且向Java程序员提供了访问方法区内的数据结构的接口
+  - 有两种类型的类加载器
+    - Java虚拟机自带的类加载器
+      1. 根类加载器（BootStrap）
+      2. 扩展类加载器（Extension）
+      3. 系统(应用)类加载器（System/Application）
+    - 用户自定义的类加载器
+      1. java.lang.ClassLoader的子类
+      2. 用户可以定制类的加载方式
+  - 类加载器并不需要等到某个类被“首次主动使用”时再加载它
+  - JVM规范允许类加载器在预料某个类将要被使用时就预先加载它，如果在预先加载的过程中遇到了.class文件缺失或存在错误，类加载器必须在<u>程序首次主动</u>使用该类时才报告错误（LinkageError错误），如果这个类一直没有被程序主动使用，那么类加载器就不会报告错误
+
+- 类的验证
+
+  - 类被加载后，就进入到了连接阶段。连接就是将已经读入到内存的类的二进制数据合并到虚拟机的运行时环境中去
+  - 类的验证内容
+    - 类文件的结构检查
+    - 语义检查
+    - 字节码验证
+    - 二进制兼容性的验证
+
+- 类的准备
+
+  - 在准备阶段，Java虚拟机为类的静态变量分配内存，并设置默认的初始值。例如对以下的Sample类，在准备阶段，将为int类型的静态变量a分配4个字节的内存空间，并且赋予默认值0，为long类型的静态变量分配8个字节的内存空间，并赋予默认追0。
+
+  ```java
+  public class Sample{
+  	private static int a = 1;
+      public static long b;
+      static {
+          b = 2;
+      }
+      ...
+  }
+  ```
+
+- 类的初始化
+
+  - 在初始化阶段，Java虚拟机执行类的初始化语句，为类的静态变量赋予初始值。在程序中，静态变量的初始化有两种途径:(1)在静态变量的声明处进行初始化;(2)在静态代码块中进行初始化。例如在以下代码中，静态变量a和b都被显示初始化，而静态变量c没有被显示初始化，它将保持默认值0。
+
+  ```java
+  public class Sample{
+      private static int a = 1;//在静态变量声明处进行初始化
+      public static long b;
+      public static long c;
+      static {
+          b = 2;//在静态代码块中进行初始化
+      }
+      ...
+  }
+  ```
+
+  - 静态变量的声明语句，以及静态代码块都被看做类的初始化语句，Java虚拟机会按照初始化语句在类文件中的先后顺序来依次执行它们。例如，当以下Sample类被初始化后，它的静态变量a的取值为4
+
+  ```java
+  public class Sample{
+  	static int a = 1;
+      static{
+          a = 2;
+      }
+      static{
+          a = 4;
+      }
+      public static void main(String[] args){
+          System.out.println("a="+a);//4
+      }
+  }
+  ```
+
+  
