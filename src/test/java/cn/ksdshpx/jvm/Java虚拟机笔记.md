@@ -302,7 +302,8 @@
 
     - 当一个接口在初始化时，并不要求其父接口都完成了初始化
     - 只有在真正使用父接口的时候（如引用接口中所使用的常量），才会初始化
-
+- 在初始化一个类时，并不会先初始化它所实现的接口
+    
     ```java
     public class MyTest5 {
         public static void main(String[] args) {
@@ -311,18 +312,24 @@
     }
     
     interface MyParent5{
-        public static int a = 5;
+        public static Thread thread = new Thread(){
+            {
+                System.out.println("MyParent5 invoked!");
+            }
+        };
     }
+
+    class MyChild5 implements MyParent5{
+    public static int b = 6;
+    }
+```
     
-    interface MyChild5 extends MyParent5{
-        public static int b = 6;
-    }
-    ```
-
-    > 删除MyParent5.class以及MyChild5.class,以上代码运行正常
-
+    > 以上程序运行结果如下：
+    >
+    > 6
+    
     若程序改为如下
-
+    
     ```java
     public class MyTest5 {
         public static void main(String[] args) {
@@ -331,16 +338,16 @@
     }
     
     interface MyParent5{
-        public static int a = 5;
+    public static int a = 5;
     }
-    
+
     interface MyChild5 extends MyParent5{
         public static int b = new Random().nextInt(2);
     }
     ```
-
+    
     > 以上代码删除MyChild5.class会报错
-
+    
     ```java
     public class MyTest6 {
         public static void main(String[] args) {
@@ -362,14 +369,14 @@
             System.out.println(count2);
         }
     
-        public static int count2 = 0;
+    public static int count2 = 0;
     
         public static Singleton getInstance() {
             return instance;
         }
     }
     ```
-
+    
     > 以上代码的运行结果如下：
     >
     > 1
