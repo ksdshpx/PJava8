@@ -488,3 +488,16 @@
       2. **扩展（Extension)类加载器**：它的父加载器为根类加载器。它从java.ext.dirs系统属性所指定的目录中加载类库，或者从JDK的安装目录的jre\lib\ext子目录（扩展目录）下加载类库，如果把用户创建的JAR文件放在这个目录下，也会自动由扩展类加载器加载。扩展类加载器是纯Java类，是java.lang.ClassLoader类的子类
       3. **系统（System)类加载器**：也称为应用类加载器，它的父加载器为扩展类加载器。它从环境变量classpath或者系统属性java.class.path所指定的目录中加载类，它是用户自定义的类加载器的默认父加载器。系统类加载器是纯Java类，是java.lang.ClassLoader类的子类
       4. 除了以上虚拟机自带的加载器外，用户还可以定制自己的类加载器。Java提供了抽象类java.lang.ClassLoader,所有用户自定义的类加载器都应该继承ClassLoader类
+  
+- **类加载器的双亲委托机制**
+
+  - 在双亲委托机制中，各个加载器按照父子关系形成==树形结构==除了根类加载器之外，其余的类加载器都有且只有一个父加载器
+  - 原理图
+  
+  ![类加载器原理图](C:\Users\peng.xing\AppData\Roaming\Typora\typora-user-images\1566783501507.png)
+  
+  - - Bootstrap ClassLoader(启动类加载器)，$JAVA_HOME中jre/lib/rt.jar里所有的class,由C++实现，不是ClassLoader子类
+    - Extension ClassLoader(扩展类加载器)，负责加载Java平台中扩展功能的一些jar包，包括$JAVA_HOME中jre/lib/ext/*.jar或-Djava.ext.dirs指定目录下的jar包
+    - App ClassLoader(系统类加载器)，负责加载classpath中指定的jar包即目录中的class
+  
+  - 若有一个类加载器能够成功加载Test类，name这个类加载器被称为==定义类加载器==，所有能成功返回Class对象引用的类加载器（包括定义类加载器）都被称为==初始类加载器==
