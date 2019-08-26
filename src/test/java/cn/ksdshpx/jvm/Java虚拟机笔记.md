@@ -302,8 +302,9 @@
 
     - 当一个接口在初始化时，并不要求其父接口都完成了初始化
     - 只有在真正使用父接口的时候（如引用接口中所使用的常量），才会初始化
-- 在初始化一个类时，并不会先初始化它所实现的接口
     
+- 在初始化一个类时，并不会先初始化它所实现的接口
+  
     ```java
     public class MyTest5 {
         public static void main(String[] args) {
@@ -322,7 +323,7 @@
     class MyChild5 implements MyParent5{
     public static int b = 6;
     }
-```
+    ```
     
     > 以上程序运行结果如下：
     >
@@ -331,19 +332,19 @@
     若程序改为如下
     
     ```java
-    public class MyTest5 {
-        public static void main(String[] args) {
-            System.out.println(MyChild5.b);
+        public class MyTest5 {
+            public static void main(String[] args) {
+                System.out.println(MyChild5.b);
+            }
         }
-    }
+        
+        interface MyParent5{
+        public static int a = 5;
+        }
     
-    interface MyParent5{
-    public static int a = 5;
-    }
-
-    interface MyChild5 extends MyParent5{
-        public static int b = new Random().nextInt(2);
-    }
+        interface MyChild5 extends MyParent5{
+            public static int b = new Random().nextInt(2);
+        }
     ```
     
     > 以上代码删除MyChild5.class会报错
@@ -383,7 +384,6 @@
     > 1
     > count1:1
     > count2:0
-    
 - **类加载器深入解析与重要特性分析**
 
     - 类加载原理图
