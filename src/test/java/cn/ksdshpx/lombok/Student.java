@@ -1,6 +1,8 @@
 package cn.ksdshpx.lombok;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Create with IntelliJ IDEA
@@ -10,10 +12,16 @@ import lombok.Getter;
  * Description:lombok学习
  */
 public class Student {
-    @Getter
+    @Setter(AccessLevel.PUBLIC)
+    @Getter(AccessLevel.PUBLIC)
     private String name;
-    @Getter
+    @Setter(AccessLevel.PRIVATE)
+    @Getter(AccessLevel.PRIVATE)
     private Integer age;
-    @Getter
+    @Setter(AccessLevel.PROTECTED)
+    @Getter(AccessLevel.PROTECTED)
     private String email;
+    @Setter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PACKAGE)
+    private Integer status;
 }
