@@ -3,6 +3,7 @@ package cn.ksdshpx.lombok;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 /**
  * Create with IntelliJ IDEA
@@ -14,6 +15,7 @@ import lombok.Setter;
 public class Student {
     @Setter(AccessLevel.PUBLIC)
     @Getter(AccessLevel.PUBLIC)
+    @Accessors(chain = true)
     private String name;
     @Setter(AccessLevel.PRIVATE)
     @Getter(AccessLevel.PRIVATE)
