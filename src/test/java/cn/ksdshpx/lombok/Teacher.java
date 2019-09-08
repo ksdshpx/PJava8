@@ -1,6 +1,7 @@
 package cn.ksdshpx.lombok;
 
 import lombok.Data;
+import lombok.NonNull;
 
 /**
  * Create with IntelliJ IDEA
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 public class Teacher {
+    @NonNull
     private String name;
     private Integer age;
     private String email;
